@@ -1,0 +1,19 @@
+RESOLVEHQ LITE — START HERE
+
+1. Install Node.js 20+ and run MongoDB locally, or create a MongoDB Atlas database.
+2. Open this folder in VS Code.
+3. Backend terminal:
+   npm install
+   Copy-Item .env.example .env
+   # Edit .env and set JWT_SECRET and MONGODB_URI
+   npm run dev
+4. Frontend terminal:
+   cd frontend
+   npm install
+   Copy-Item .env.example .env
+   npm run dev
+5. Open http://localhost:5173
+6. API health: http://localhost:5001/health
+7. Swagger: http://localhost:5001/api-docs
+
+See README.md for complete local setup, Postman, and deployment instructions.
