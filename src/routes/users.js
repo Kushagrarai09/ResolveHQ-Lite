@@ -1,0 +1,10 @@
+const router=require("express").Router();
+const {body,param}=require("express-validator");
+const protect=require("../middleware/auth");
+const authorize=require("../middleware/authorize");
+const {validateRequest}=require("../middleware/errors");
+const users=require("../controllers/users");
+router.use(protect,authorize("admin"));
+router.get("/agents",users.listAgents);
+router.patch("/:id/role",[param("id").isMongoId(),body("role").isIn(["user","agent","admin"]),validateRequest],users.setRole);
+module.exports=router;
