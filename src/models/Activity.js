@@ -6,7 +6,7 @@ const activitySchema = new mongoose.Schema({
   actor: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   action: { type: String, enum: ["ticket_created", "ticket_updated", "ticket_deleted"], required: true },
   changes: [{
-    field: { type: String, enum: ["title", "description", "status", "priority"], required: true },
+    field: { type: String, enum: ["title", "description", "status", "priority", "category", "tags", "dueAt", "assignedTo"], required: true },
     oldValue: { type: String },
     newValue: { type: String }
   }],

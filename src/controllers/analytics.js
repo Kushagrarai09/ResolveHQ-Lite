@@ -4,8 +4,11 @@ const PRIORITY_KEYS = ["low", "medium", "high"];
 
 async function overview(req, res, next) {
   try {
+    const match = req.user.role === "admin" ? {} : req.user.role === "agent"
+      ? { $or: [{ owner: req.user._id }, { assignedTo: req.user._id }] }
+      : { owner: req.user._id };
     const [summary] = await Ticket.aggregate([
-      { $match: { $or: [{ owner: req.user._id }, { assignedTo: req.user._id }], ...(req.user.role === "admin" ? {} : {}) } },
+      { $match: match },
       { $group: {
         _id: null, total: { $sum: 1 },
         open: { $sum: { $cond: [{ $eq: ["$status", "open"] }, 1, 0] } },
