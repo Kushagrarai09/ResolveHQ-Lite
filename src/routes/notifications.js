@@ -1,0 +1,11 @@
+const router = require("express").Router();
+const { query, param } = require("express-validator");
+const protect = require("../middleware/auth");
+const { validateRequest } = require("../middleware/errors");
+const notifications = require("../controllers/notifications");
+
+router.use(protect);
+router.get("/", [query("unread").optional().isIn(["true", "false"]), query("page").optional().isInt({ min: 1 }), query("limit").optional().isInt({ min: 1, max: 50 }), validateRequest], notifications.list);
+router.patch("/read-all", notifications.markAllRead);
+router.patch("/:id/read", [param("id").isMongoId(), validateRequest], notifications.markRead);
+module.exports = router;
