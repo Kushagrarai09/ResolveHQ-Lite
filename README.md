@@ -10,6 +10,7 @@ A full-stack support-ticket management portfolio project built with **Node.js, E
 - Add and read comments on your own tickets
 - **Ticket activity history (audit log):** records creation, field changes (old/new values), and deletion
 - Activity history is read-only through the API and retained after ticket deletion
+- **Dashboard analytics API:** aggregated ticket totals by status and priority for the authenticated user
 - Search by title; filter by status/priority; pagination
 - Request validation, centralized errors, security headers, basic API rate limiting
 - Ticket ownership enforced in database queries
@@ -50,13 +51,14 @@ All routes below except health and API docs require `Authorization: Bearer <JWT>
 | PATCH | `/api/tickets/:id` | Update an owned ticket and record changes |
 | DELETE | `/api/tickets/:id` | Delete ticket/comments; retain audit history |
 | GET | `/api/tickets/:id/activity` | Read latest 100 activity records |
+| GET | `/api/analytics/overview` | Ticket totals by status and priority for the current user |
 | GET | `/api/tickets/:id/comments` | List comments |
 | POST | `/api/tickets/:id/comments` | Add comment |
 
-### Activity history API
+### Dashboard analytics API
 
 ```http
-GET /api/tickets/:id/activity
+GET /api/analytics/overview
 Authorization: Bearer <JWT>
 ```
 
@@ -66,17 +68,26 @@ Example response:
 {
   "success": true,
   "data": {
-    "activities": [
-      {
-        "action": "ticket_updated",
-        "changes": [
-          { "field": "status", "oldValue": "open", "newValue": "resolved" }
-        ],
-        "createdAt": "2026-10-30T10:00:00.000Z"
-      }
-    ]
+    "total": 24,
+    "open": 10,
+    "inProgress": 6,
+    "resolved": 8,
+    "byPriority": {
+      "low": 5,
+      "medium": 12,
+      "high": 7
+    }
   }
 }
+```
+
+The endpoint uses a MongoDB aggregation pipeline with an initial owner filter, so users receive analytics only for their own tickets. It returns zero counts when the user has no tickets and always includes all supported status and priority keys.
+
+### Activity history API
+
+```http
+GET /api/tickets/:id/activity
+Authorization: Bearer <JWT>
 ```
 
 Events are `ticket_created`, `ticket_updated`, and `ticket_deleted`. The endpoint returns at most 100 records, newest first. There are no API routes to modify or delete activity records. The activity record stores the ticket ObjectId without a cascading Ticket reference, so it survives ticket deletion. A deleted ticket's history can be read only by the user recorded on its deletion event. Database administrators can still modify the underlying MongoDB collection; this is append-only at the application API layer, not tamper-proof storage.
@@ -98,6 +109,9 @@ Import `postman/ResolveHQ-Lite.postman_collection.json`. Set `baseUrl`, `token`,
 - [ ] No-op updates do not create unnecessary events
 - [ ] Other users cannot read a ticket's activity
 - [ ] Deleted ticket history remains readable by its original owner
+- [ ] Analytics totals match the user's tickets by status and priority
+- [ ] A user with no tickets receives zero counts for every metric
+- [ ] Users cannot view another user's analytics
 - [ ] No update/delete activity endpoints exist
 - [ ] Two-user ownership checks pass
 
