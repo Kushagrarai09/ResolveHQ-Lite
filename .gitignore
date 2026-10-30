@@ -4,5 +4,6 @@ frontend/dist/
 .env
 frontend/.env
 coverage/
+private-uploads/
 .DS_Store
 npm-debug.log*

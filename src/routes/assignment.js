@@ -1,0 +1,1 @@
+const r=require("express").Router(),{param,body}=require("express-validator"),protect=require("../middleware/auth"),{validateRequest}=require("../middleware/errors"),c=require("../controllers/assignment");r.use(protect);r.patch("/:id/assign",[param("id").isMongoId(),body("assignedTo").optional({nullable:true}).isMongoId(),validateRequest],c.assign);module.exports=r;

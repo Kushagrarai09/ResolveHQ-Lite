@@ -1,13 +1,32 @@
 {
   "name": "resolvehq-lite-api",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "private": true,
   "description": "Support ticket REST API built with Node.js, Express and MongoDB",
   "main": "src/server.js",
-  "scripts": {"start":"node src/server.js", "dev":"nodemon src/server.js", "check":"node --check src/server.js && node --check src/app.js"},
-  "engines": {"node": ">=20"},
-  "dependencies": {
-    "bcryptjs":"^2.4.3", "cors":"^2.8.5", "dotenv":"^16.4.7", "express":"^4.21.2", "express-rate-limit":"^7.5.0", "express-validator":"^7.2.1", "helmet":"^8.0.0", "jsonwebtoken":"^9.0.2", "mongoose":"^8.9.5", "swagger-ui-express":"^5.0.1"
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "check": "node --check src/server.js && node --check src/app.js && node --check src/controllers/tickets.js && node --check src/controllers/analytics.js && node --check src/controllers/assignment.js && node --check src/controllers/files.js",
+    "test": "node --test"
   },
-  "devDependencies": {"nodemon":"^3.1.9"}
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "multer": "^2.0.2",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
 }

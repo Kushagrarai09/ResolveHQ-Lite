@@ -116,3 +116,18 @@ Import `postman/ResolveHQ-Lite.postman_collection.json`. Set `baseUrl`, `token`,
 - [ ] Two-user ownership checks pass
 
 This is a learning/portfolio project, not a security-audited production service. Use demo data only.
+
+
+## Workflow extensions
+
+- Ticket assignment to existing `agent` / `admin` accounts: `PATCH /api/tickets/:id/assign` with `{ "assignedTo": "<userId>" }`; send `null` to unassign.
+- Team endpoints: `GET /api/team/agents`; `PATCH /api/team/users/:id/role` (admin only).
+- SLA fields: tickets accept `dueAt`; `GET /api/sla/summary` returns overdue and due-in-next-24-hours counts. Resolved tickets are excluded.
+- Notifications: `GET /api/notifications`, `PATCH /api/notifications/:id/read`, and `PATCH /api/notifications/read-all`.
+- Categories and tags: create/update with `category` and `tags`; filter tickets using `?category=billing&tag=urgent`.
+- Advanced search: `GET /api/tickets?search=...` searches title and description and accepts a 24-character ticket ID.
+- Attachments: `POST /api/files/tickets/:id/attachments` (multipart field `file`), list with `GET /api/files/tickets/:id/attachments`, download with `GET /api/files/attachments/:attachmentId/download`.
+
+New registrations are standard users. Bootstrap the initial admin by setting a user document's `role` to `admin` directly in MongoDB. This avoids public self-escalation. Agents can view tickets assigned to them or created by them; admins can view all tickets. This MVP is not multi-tenant yet, so do not use it as a shared production service across unrelated organizations.
+
+Uploads are stored privately under `UPLOAD_DIR` (default `private-uploads`), allow JPEG/PNG/PDF/TXT by declared MIME type, and are limited to 5 MB per file. MIME type checks are not file-signature or malware scans. Configure persistent storage/object storage before deployment; ephemeral host filesystems may discard uploads on redeploy.

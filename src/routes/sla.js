@@ -1,0 +1,1 @@
+const r=require("express").Router(),protect=require("../middleware/auth"),c=require("../controllers/sla");r.use(protect);r.get("/summary",c.summary);module.exports=r;
