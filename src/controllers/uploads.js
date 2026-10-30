@@ -1,0 +1,1 @@
+function uploadNotConfigured(req,res){return res.status(501).json({success:false,message:"File uploads are not configured. Connect durable object storage (S3 or Cloudinary) before enabling this endpoint."});}module.exports={uploadNotConfigured};

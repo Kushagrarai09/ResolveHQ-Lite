@@ -1,0 +1,1 @@
+const router=require("express").Router();const protect=require("../middleware/auth");const c=require("../controllers/uploads");router.use(protect);router.post("/tickets/:id/attachments",c.uploadNotConfigured);module.exports=router;
